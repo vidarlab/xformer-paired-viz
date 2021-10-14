@@ -3,14 +3,16 @@ Official repository for the upcoming WACV 2022 paper "Visualizing Paired Image S
 
 # Instructions
 
-Download the provided model weights hosted on Google drive [here](https://drive.google.com/drive/folders/1IJPFw6JsT9jtKHHeALcb4xNgAuRc5cqj?usp=sharing). For each of the 3 datasets that we used in our paper, Hotels-50k, Goolge LandmarksV2 (GLM), and Stanford Online Products (SOP), we provide the trained ViT-B/16 model weights that were used to generate the visualizions in the paper. We also include the ResNet-101 weights for comparison. 
+Download the provided model weights hosted on Google drive [here](https://drive.google.com/drive/folders/1IJPFw6JsT9jtKHHeALcb4xNgAuRc5cqj?usp=sharing). For each of the 3 datasets that we used in our paper, Hotels-50k, Goolge LandmarksV2 (GLM), and Stanford Online Products (SOP), we provide the trained ViT-B16 model weights (ViT Base size with 16 patch-size) that were used to generate the visualizions in the paper. We also include the ResNet-101 weights for comparison. For Hotels-50k and SOP, we also include ViT-B32 weights.
 
-After cloning the repo, make a new directory called "weights/" and place the model weights there. 
+After cloning the repo, make a new directory called "weights/{dataset}" and place the model weights there. 
 
-In the repo, we provide some example images under "examples/". To generate a visualization, run main.py using the command line arguments specifying the image pair, dataset, model weights, model type (ViT-B or resnet-101) and save directory, like so:
+The images to generate the similarity map for should go in the directory "images/{dataset}". We include some example images in this repo. To generate a paired-image visualization, run main.py using the command line arguments specifying the dataset, the filenames of the images (which should be stored in "images/{dataset}"), and the model type (ViT-B{16|32} or resnet-101) like so:
 
-    python3 main.py --imageA examples/Hotels-50k/images/img1.png --imageB examples/Hotels-50k/images/img2.png --dataset Hotels-50k --model_weights weights/Hotels-50k/vit.pth --model_type ViT-B --save_dir examples/Hotels-50k/results
-    
+    python3 main.py --dataset Hotels-50k --imageA img1.png --imageB img2.png --model_type ViT-B16
+
+Results are automatically saved in the directory "results/{dataset}/{model_type}"
+
 Image pair:
 
 ![image](https://user-images.githubusercontent.com/70965199/137340831-783d6fa6-23ad-431b-b695-301cf897b94a.png) ![image](https://user-images.githubusercontent.com/70965199/137340902-059ee951-538b-4abb-a9ab-f790c67bd60c.png)
