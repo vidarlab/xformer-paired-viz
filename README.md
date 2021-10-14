@@ -11,7 +11,7 @@ The images to generate the similarity map for should go in the directory "images
 
     python3 main.py --dataset Hotels-50k --imageA img1.png --imageB img2.png --model_type ViT-B16
 
-Results are automatically saved in the directory "results/{dataset}/{model_type}"
+The above command generates the paired similarity map visualizations of the images with the paths "images/Hotels-50k/img1.png" and "images/Hotels-50k/img2.png". The weights are loaded from "weights/Hotels-50k/ViT-B16.pth". Results are automatically saved in the directory "results/{dataset}/{model_type}", which for this example would be "results/Hotels-50k/ViT-B16". 
 
 Image pair:
 
