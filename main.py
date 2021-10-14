@@ -7,31 +7,34 @@ import numpy as np
 import torch
 import torchvision.transforms as transforms
 
-from dataset_norms import dataset_norms
-from models import VisionTransformer, ResNetV2
-from visualization_functions import generate_sim_maps, show_cam_on_image, norm
+from src.dataset_norms import dataset_norms
+from src.models import VisionTransformer, ResNetV2
+from src.visualization_functions import generate_sim_maps, show_cam_on_image, norm
 
 
 def main():
 
     parser = argparse.ArgumentParser(description='Paired Image Visualization')
-    parser.add_argument('--imageA', type=str, default='examples/Hotels-50k/images/img1.png')
-    parser.add_argument('--imageB', type=str, default='examples/Hotels-50k/images/img2.png')
-    parser.add_argument('--model_weights', type=str, default='weights/Hotels-50k/vit.pth')
-    parser.add_argument('--model_type', type=str, default='ViT-B', help='"ViT-B" or "resnet-101"')
-    parser.add_argument('--patch_size', type=int, default=16, help='ViT-B patch-size, either 16 or 32')
     parser.add_argument('--dataset', type=str, default='Hotels-50k', help='Choices: Hotels-50k, SOP, GLM')
+    parser.add_argument('--imageA', type=str, default='img1.png')
+    parser.add_argument('--imageB', type=str, default='img2.png')
+    parser.add_argument('--model_type', type=str, default='ViT-B16', help='"ViT-B{patch_size}" or "resnet-101"')
     parser.add_argument('--device', type=str, default='gpu', help='use "GPU" or "CPU"')
-    parser.add_argument('--save_dir', type=str, default='examples/Hotels-50k/results')
 
     args = parser.parse_args()
 
-    if not os.path.exists(args.save_dir):
-        os.makedirs(args.save_dir)
+    imageA_path = os.path.join('images', args.dataset, args.imageA)
+    imageB_path = os.path.join('images', args.dataset, args.imageB)
+    model_weights = os.path.join('weights', args.dataset, f'{args.model_type}.pth')
+    save_dir = os.path.join('results', args.dataset, args.model_type)
 
-    if args.model_type == 'ViT-B':
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    if 'vit' in args.model_type.lower():
+        patch_size = int(args.model_type[-2:]) # Extract patch_size from model weights file
         config = {'output_size': 512, 'init_head': True, 'classifier': 'token', 'hidden_size': 768, 'img_size': 256,
-                  'patch_size': (args.patch_size, args.patch_size), 'load_from': None, 'dropout_rate': 0, 'vis': True,
+                  'patch_size': (patch_size, patch_size), 'load_from': None, 'dropout_rate': 0, 'vis': True,
                   'num_layers': 12, 'mlp_dim': 3072, 'num_heads': 12, 'global_feature_embedding': 'mean',
                   'attention_dropout_rate': 0}
         model = VisionTransformer(config=config)
@@ -40,7 +43,7 @@ def main():
         model = ResNetV2(config=config)
     else:
         raise ValueError(f"Invalid model_type argument: '{args.model_type}' "
-                         "model_type argument must be either ViT-B or resnet-101")
+                         "model_type argument must be either ViT-B/{32|16} or resnet-101")
 
     if args.device.lower() == 'gpu':
         use_gpu = True
@@ -48,7 +51,7 @@ def main():
     else:
         use_gpu = False
 
-    weights = torch.load(args.model_weights)
+    weights = torch.load(model_weights)
     weights = {k.replace('module.', ''): weights[k] for k in weights.keys()}
     model.load_state_dict(weights)
 
@@ -63,9 +66,6 @@ def main():
         transforms.ToTensor(),
         transforms.Grayscale(num_output_channels=3)
     ])
-
-    imageA_path = args.imageA
-    imageB_path = args.imageB
 
     simmapA, simmapB, sim_score = generate_sim_maps(imageA_path, imageB_path, model, transform, use_gpu=use_gpu)
     imageA_gs = transform_greyscale(Image.open(imageA_path).convert("RGB"))
@@ -86,8 +86,8 @@ def main():
     imageA_name = os.path.split(imageA_path)[1].split('.')[0]
     imageB_name = os.path.split(imageB_path)[1].split('.')[0]
 
-    simmapA.save(f'{args.save_dir}/{imageA_name}_simmap_with_{imageB_name}.png')
-    simmapB.save(f'{args.save_dir}/{imageB_name}_simmap_with_{imageA_name}.png')
+    simmapA.save(f'{save_dir}/{imageA_name}_simmap_with_{imageB_name}.png')
+    simmapB.save(f'{save_dir}/{imageB_name}_simmap_with_{imageA_name}.png')
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from os.path import join as pjoin
 
-from models.utils import np2th
+from src.models.utils import np2th
 from .mlp import Mlp
 from .attention import Attention
 

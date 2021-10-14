@@ -1,10 +1,10 @@
 import cv2
 from PIL import Image
+import torch
 import numpy as np
 from numpy import matlib as mb
 
-from models import VisionTransformer
-import torch
+from .models import VisionTransformer
 
 
 def compute_spatial_similarity(prepooledA, pooledA, prepooledB, pooledB):
