@@ -23,4 +23,9 @@ Result:
 
 # Citation
 
-TODO: add citation once published.
+      @inproceedings{black2022visualizing,
+      title={Visualizing Paired Image Similarity in Transformer Networks},
+      author={Black, Samuel and Stylianou, Abby and Pless, Robert and Souvenir, Richard},
+      booktitle={Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision},
+      pages={3164--3173},
+      year={2022}}
