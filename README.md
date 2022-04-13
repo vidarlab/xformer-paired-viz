@@ -1,5 +1,5 @@
 # xformer-paired-viz
-Official repository for the upcoming WACV 2022 paper "Visualizing Paired Image Similarity in Transformer Networks". Here, you'll find the code to generate paired image visualizations using our provided ViT transformer models that were trained for the task of image retrieval.
+Official repository for the WACV 2022 paper [Visualizing Paired Image Similarity in Transformer Networks](https://openaccess.thecvf.com/content/WACV2022/papers/Black_Visualizing_Paired_Image_Similarity_in_Transformer_Networks_WACV_2022_paper.pdf). Here, you'll find the code to generate paired image visualizations using our provided ViT transformer models that were trained for the task of image retrieval.
 
 # Instructions
 
